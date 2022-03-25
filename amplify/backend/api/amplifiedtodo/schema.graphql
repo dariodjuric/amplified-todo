@@ -46,8 +46,8 @@ type Item
   remindAt: AWSDateTime
 }
 
-type User
-@model(mutations: { update: "updateUser" }, queries: { get: "getUser" }, subscriptions: null)
+type UserPreference
+@model(mutations: { update: "updateUserPreference" }, queries: { get: "getUserPreference" }, subscriptions: null)
 @auth(
   rules: [
     {
@@ -63,6 +63,11 @@ type User
   notificationConfig: NotificationConfig
 }
 
+type NotificationConfig {
+  email: Boolean,
+  inApp: Boolean
+}
+
 type NotificationQueue
 @model(mutations: null, queries: null, subscriptions: null)
 {
@@ -72,11 +77,6 @@ type NotificationQueue
   inApp: Boolean,
   sent: Boolean,
   scheduledFor: AWSDateTime
-}
-
-type NotificationConfig {
-  email: Boolean,
-  inApp: Boolean
 }
 
 type Mutation {
