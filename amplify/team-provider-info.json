@@ -1,0 +1,30 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifiedtodo-dev-171236-authRole",
+      "UnauthRoleArn": "arn:aws:iam::499906750856:role/amplify-amplifiedtodo-dev-171236-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::499906750856:role/amplify-amplifiedtodo-dev-171236-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-amplifiedtodo-dev-171236-deployment",
+      "UnauthRoleName": "amplify-amplifiedtodo-dev-171236-unauthRole",
+      "StackName": "amplify-amplifiedtodo-dev-171236",
+      "StackId": "arn:aws:cloudformation:eu-central-1:499906750856:stack/amplify-amplifiedtodo-dev-171236/3a216bd0-ab8d-11ec-a084-067682aeae5c",
+      "AmplifyAppId": "d207af0nn3msr3"
+    },
+    "categories": {
+      "auth": {
+        "amplifiedtododa952a0d": {}
+      },
+      "function": {
+        "addToQueue": {
+          "deploymentBucketName": "amplify-amplifiedtodo-dev-171236-deployment",
+          "s3Key": "amplify-builds/addToQueue-676b736673764339346f-build.zip"
+        },
+        "processQueue": {
+          "deploymentBucketName": "amplify-amplifiedtodo-dev-171236-deployment",
+          "s3Key": "amplify-builds/processQueue-6d2f616a534662314975-build.zip"
+        }
+      }
+    }
+  }
+}
