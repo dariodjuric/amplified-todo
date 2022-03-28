@@ -1,0 +1,47 @@
+service: amplified-todo-api
+
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  profile: ${env:PROFILE}
+  stage: dev
+
+functions:
+  insertUserPreference:
+    handler: handlers/insert-user-preference/index.handler
+    events:
+      - cognitoUserPool:
+          pool: AmplifiedToDo
+          trigger: PostConfirmation
+
+resources:
+  Resources:
+    CognitoUserPoolAmplifiedToDo:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ClientPool_${self:provider.stage}
+        UsernameAttributes:
+          - email
+        Schema:
+          - Name: email
+            AttributeDataType: String
+            Required: true
+            Mutable: true
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireLowercase: false
+            RequireNumbers: false
+            RequireSymbols: false
+            RequireUppercase: false
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: AmplifiedToDo_UI_${self:provider.stage}
+        UserPoolId:
+          Ref: CognitoUserPoolAmplifiedToDo
