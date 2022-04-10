@@ -1,0 +1,96 @@
+# Lambda Data Sources
+# Naming convention is ${FunctionName}LambdaDataSource, and each should reference a function resource.
+# Function resources are created implicitly by Serverless, and are named like ${FunctionName}LambdaFunction.
+- type: AWS_LAMBDA
+  name: ProcessQueueLambdaDataSource
+  config:
+    functionName: processQueue
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - lambda:InvokeFunction
+        Resource: arn:aws:lambda:${aws:region}:${aws:accountId}:*
+
+# Table Data Sources
+# Naming convention is ${TableName}DataSource, and each should reference an existing table resource, created explicitly
+# in serverless.resources.yml.
+- type: AMAZON_DYNAMODB
+  name: ListDataSource
+  config:
+    tableName: { Ref: ListTableResource }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:*
+- type: AMAZON_DYNAMODB
+  name: ItemDataSource
+  config:
+    tableName: { Ref: ItemTableResource }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:*
+- type: AMAZON_DYNAMODB
+  name: UserPreferenceDataSource
+  config:
+    tableName: { Ref: UserPreferenceTableResource }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:*
+- type: AMAZON_DYNAMODB
+  name: UserPreferenceDataSource
+  config:
+    tableName: { Ref: UserPreferenceTableResource }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:*
+- type: AMAZON_DYNAMODB
+  name: NotificationQueueDataSource
+  config:
+    tableName: { Ref: NotificationQueueTableResource }
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:*

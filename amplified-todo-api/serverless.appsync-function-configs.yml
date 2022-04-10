@@ -1,0 +1,5 @@
+# Naming convention is Invoke${FunctionName}LambdaDataSource, and each should reference a data source named ${FunctionName}LambdaDataSource.
+- dataSource: ProcessQueueLambdaDataSource
+  name: InvokeProcessQueueLambdaDataSource
+  request: default-invoke-lambda.req.vtl
+  response: default-invoke-lambda.res.vtl

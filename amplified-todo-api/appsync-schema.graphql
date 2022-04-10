@@ -1,0 +1,262 @@
+type List {
+  id: ID!
+  cognitoUserId: ID!
+  title: String!
+  items(filter: ModelItemFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelItemConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Item {
+  id: ID!
+  cognitoUserId: ID!
+  listId: ID!
+  title: String!
+  notes: String!
+  completed: Boolean
+  remindAt: AWSDateTime
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type UserPreference {
+  id: ID!
+  cognitoUserId: ID!
+  notificationConfig: NotificationConfig
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type NotificationConfig {
+  email: Boolean
+  inApp: Boolean
+}
+
+type NotificationQueue {
+  id: ID!
+  itemId: ID!
+  email: Boolean
+  inApp: Boolean
+  sent: Boolean
+  scheduledFor: AWSDateTime
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Mutation {
+  processQueue(input: ProcessQueueInput!): ID
+  createList(input: CreateListInput!, condition: ModelListConditionInput): List
+  updateList(input: UpdateListInput!, condition: ModelListConditionInput): List
+  createItem(input: CreateItemInput!, condition: ModelItemConditionInput): Item
+  updateItem(input: UpdateItemInput!, condition: ModelItemConditionInput): Item
+  updateUserPreference(input: UpdateUserPreferenceInput!, condition: ModelUserPreferenceConditionInput): UserPreference
+}
+
+input ProcessQueueInput {
+  since: AWSDateTime!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelListConnection {
+  items: [List]!
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelListFilterInput {
+  id: ModelIDInput
+  cognitoUserId: ModelIDInput
+  title: ModelStringInput
+  and: [ModelListFilterInput]
+  or: [ModelListFilterInput]
+  not: ModelListFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getList(id: ID!): List
+  listLists(filter: ModelListFilterInput, limit: Int, nextToken: String): ModelListConnection
+  getItem(id: ID!): Item
+  listItems(filter: ModelItemFilterInput, limit: Int, nextToken: String): ModelItemConnection
+  getUserPreference(id: ID!): UserPreference
+  getNotificationQueueItem(id: ID!): NotificationQueue
+}
+
+input CreateListInput {
+  id: ID
+  cognitoUserId: ID!
+  title: String!
+}
+
+input UpdateListInput {
+  id: ID!
+  cognitoUserId: ID
+  title: String
+}
+
+input ModelListConditionInput {
+  cognitoUserId: ModelIDInput
+  title: ModelStringInput
+  and: [ModelListConditionInput]
+  or: [ModelListConditionInput]
+  not: ModelListConditionInput
+}
+
+type ModelItemConnection {
+  items: [Item]!
+  nextToken: String
+}
+
+input ModelItemFilterInput {
+  id: ModelIDInput
+  cognitoUserId: ModelIDInput
+  listId: ModelIDInput
+  title: ModelStringInput
+  notes: ModelStringInput
+  completed: ModelBooleanInput
+  remindAt: ModelStringInput
+  and: [ModelItemFilterInput]
+  or: [ModelItemFilterInput]
+  not: ModelItemFilterInput
+}
+
+input CreateItemInput {
+  id: ID
+  cognitoUserId: ID!
+  listId: ID!
+  title: String!
+  notes: String!
+  completed: Boolean
+  remindAt: AWSDateTime
+}
+
+input UpdateItemInput {
+  id: ID!
+  cognitoUserId: ID
+  listId: ID
+  title: String
+  notes: String
+  completed: Boolean
+  remindAt: AWSDateTime
+}
+
+input ModelItemConditionInput {
+  cognitoUserId: ModelIDInput
+  listId: ModelIDInput
+  title: ModelStringInput
+  notes: ModelStringInput
+  completed: ModelBooleanInput
+  remindAt: ModelStringInput
+  and: [ModelItemConditionInput]
+  or: [ModelItemConditionInput]
+  not: ModelItemConditionInput
+}
+
+input NotificationConfigInput {
+  email: Boolean
+  inApp: Boolean
+}
+
+input UpdateUserPreferenceInput {
+  id: ID!
+  cognitoUserId: ID
+  notificationConfig: NotificationConfigInput
+}
+
+input ModelUserPreferenceConditionInput {
+  cognitoUserId: ModelIDInput
+  and: [ModelUserPreferenceConditionInput]
+  or: [ModelUserPreferenceConditionInput]
+  not: ModelUserPreferenceConditionInput
+}

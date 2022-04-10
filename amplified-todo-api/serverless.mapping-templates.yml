@@ -1,0 +1,74 @@
+
+  - type: Query
+    field: getList
+    dataSource: ListDataSource
+    request: Query.getList.req.vtl
+    response: Query.getList.res.vtl
+  - type: Query
+    field: listLists
+    dataSource: ListDataSource
+    request: Query.listLists.req.vtl
+    response: Query.listLists.res.vtl
+  - type: Mutation
+    field: createList
+    dataSource: ListDataSource
+    request: Mutation.createList.req.vtl
+    response: Mutation.createList.res.vtl
+  - type: Mutation
+    field: updateList
+    dataSource: ListDataSource
+    request: Mutation.updateList.req.vtl
+    response: Mutation.updateList.res.vtl
+
+  - type: Query
+    field: getItem
+    dataSource: ItemDataSource
+    request: Query.getItem.req.vtl
+    response: Query.getItem.res.vtl
+  - type: Query
+    field: listItems
+    dataSource: ItemDataSource
+    request: Query.listItems.req.vtl
+    response: Query.listItems.res.vtl
+  - type: Mutation
+    field: createItem
+    dataSource: ItemDataSource
+    request: Mutation.createItem.req.vtl
+    response: Mutation.createItem.res.vtl
+  - type: Mutation
+    field: updateItem
+    dataSource: ItemDataSource
+    request: Mutation.updateItem.req.vtl
+    response: Mutation.updateItem.res.vtl
+
+  - type: Query
+    field: getUserPreference
+    dataSource: UserPreferenceDataSource
+    request: Query.getUserPreference.req.vtl
+    response: Query.getUserPreference.res.vtl
+  - type: Mutation
+    field: updateUserPreference
+    dataSource: UserPreferenceDataSource
+    request: Mutation.updateUserPreference.req.vtl
+    response: Mutation.updateUserPreference.res.vtl
+
+  - type: Query
+    field: getNotificationQueueItem
+    dataSource: NotificationQueueDataSource
+    request: Query.getNotificationQueueItem.req.vtl
+    response: Query.getNotificationQueueItem.res.vtl
+
+
+  - type: Mutation
+    field: processQueue
+    kind: 'PIPELINE'
+    request: Mutation.processQueue.req.vtl
+    response: Mutation.processQueue.res.vtl
+    functions:
+      - InvokeProcessQueueLambdaDataSource
+
+  - type: List
+    field: items
+    dataSource: ItemDataSource
+    request: List.items.req.vtl
+    response: List.items.res.vtl

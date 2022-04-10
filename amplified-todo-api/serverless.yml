@@ -8,14 +8,37 @@ provider:
   runtime: nodejs14.x
   profile: ${env:PROFILE}
   stage: dev
+  environment:
+    LIST_TABLE_NAME: List_${self:provider.stage}
+    ITEM_TABLE_NAME: Item_${self:provider.stage}
+    USER_PREFERENCE_TABLE_NAME: UserPreference_${self:provider.stage}
+    NOTIFICATION_QUEUE_TABLE_NAME: NotificationQueue_${self:provider.stage}
 
 functions:
+  processQueue:
+    handler: handlers/process-queue/index.handler
   insertUserPreference:
     handler: handlers/insert-user-preference/index.handler
     events:
       - cognitoUserPool:
           pool: AmplifiedToDo
           trigger: PostConfirmation
+
+custom:
+  appSync:
+    name: AmplifiedToDo_${self:provider.stage}
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    schema: appsync-schema.graphql
+    userPoolConfig:
+      defaultAction: ALLOW
+      userPoolId:
+        Ref: CognitoUserPoolAmplifiedToDo
+    mappingTemplates:
+      - ${file(serverless.mapping-templates.yml)}
+    functionConfigurations:
+      - ${file(serverless.appsync-function-configs.yml)}
+    dataSources:
+      - ${file(serverless.data-sources.yml)}
 
 resources:
   Resources:
@@ -45,3 +68,65 @@ resources:
         ClientName: AmplifiedToDo_UI_${self:provider.stage}
         UserPoolId:
           Ref: CognitoUserPoolAmplifiedToDo
+    ListTableResource:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.LIST_TABLE_NAME}
+    ItemTableResource:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: listId
+            AttributeType: S
+        GlobalSecondaryIndexes:
+          - IndexName: byList
+            KeySchema:
+              - AttributeName: listId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.ITEM_TABLE_NAME}
+    UserPreferenceTableResource:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.USER_PREFERENCE_TABLE_NAME}
+    NotificationQueueTableResource:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: isSent
+            AttributeType: S
+        GlobalSecondaryIndexes:
+          - IndexName: bySentStatus
+            KeySchema:
+              - AttributeName: isSent
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.NOTIFICATION_QUEUE_TABLE_NAME}

@@ -1,0 +1,88 @@
+type List
+@model(
+  mutations: { create: "createList", update: "updateList" }
+  queries: { get: "getList", list: "listLists" }
+  subscriptions: null
+)
+@auth(
+  rules: [
+    {
+      allow: owner
+      identityField: "sub"
+      ownerField: "owner"
+      operations: [create, update, delete, read]
+    }
+  ]
+){
+  id: ID!
+  cognitoUserId: ID!
+  title: String!
+  items: [Item] @connection(keyName: "byList", fields: ["id"])
+}
+
+type Item
+@model(
+  mutations: { create: "createItem", update: "updateItem" }
+  queries: { get: "getItem", list: "listItems" }
+  subscriptions: null
+)
+@key(name: "byList", fields: ["listId"])
+@auth(
+  rules: [
+    {
+      allow: owner
+      identityField: "sub"
+      ownerField: "owner"
+      operations: [create, update, delete, read]
+    }
+  ]
+){
+  id: ID!
+  cognitoUserId: ID!
+  listId: ID!
+  title: String!
+  notes: String!
+  completed: Boolean
+  remindAt: AWSDateTime
+}
+
+type UserPreference
+@model(mutations: { update: "updateUserPreference" }, queries: { get: "getUserPreference" }, subscriptions: null)
+@auth(
+  rules: [
+    {
+      allow: owner
+      identityField: "sub"
+      ownerField: "owner"
+      operations: [create, update, delete, read]
+    }
+  ]
+) {
+  id: ID!
+  cognitoUserId: ID!
+  notificationConfig: NotificationConfig
+}
+
+type NotificationConfig {
+  email: Boolean,
+  inApp: Boolean
+}
+
+type NotificationQueue
+@model(mutations: null, queries: { get: "getNotificationQueueItem" }, subscriptions: null)
+{
+  id: ID!
+  itemId: ID!
+  email: Boolean,
+  inApp: Boolean,
+  sent: Boolean,
+  scheduledFor: AWSDateTime
+}
+
+type Mutation {
+  processQueue(input: ProcessQueueInput!): ID @function(name: "processQueue")
+}
+
+input ProcessQueueInput {
+  since: AWSDateTime!
+}
