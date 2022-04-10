@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "deploy": "node transform-schema.js && amplify codegen && sls deploy"
+  },
   "dependencies": {
     "graphql-auth-transformer": "^7.2.29",
     "graphql-connection-transformer": "^5.2.29",
