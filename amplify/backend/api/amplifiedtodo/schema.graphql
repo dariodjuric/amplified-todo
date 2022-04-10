@@ -69,7 +69,7 @@ type NotificationConfig {
 }
 
 type NotificationQueue
-@model(mutations: null, queries: null, subscriptions: null)
+@model(mutations: null, queries: { get: "getNotificationQueueItem" }, subscriptions: null)
 {
   id: ID!
   itemId: ID!
@@ -80,7 +80,7 @@ type NotificationQueue
 }
 
 type Mutation {
-  processQueue(input: ProcessQueueInput!): ID @function(name: "processQueue-${env}")
+  processQueue(input: ProcessQueueInput!): ID @function(name: "processQueue")
 }
 
 input ProcessQueueInput {
