@@ -26,6 +26,12 @@ functions:
       - cognitoUserPool:
           pool: AmplifiedToDo
           trigger: PostConfirmation
+  addToQueue:
+    handler: handlers/add-to-queue/index.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: !GetAtt ItemTableResource.StreamArn
 
 custom:
   appSync:
