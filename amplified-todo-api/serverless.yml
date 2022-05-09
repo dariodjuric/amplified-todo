@@ -3,6 +3,9 @@ service: amplified-todo-api
 frameworkVersion: '3'
 useDotenv: true
 
+plugins:
+  - serverless-appsync-plugin
+
 provider:
   name: aws
   runtime: nodejs14.x
