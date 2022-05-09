@@ -4,6 +4,7 @@ frameworkVersion: '3'
 useDotenv: true
 
 plugins:
+  - serverless-esbuild
   - serverless-appsync-plugin
 
 provider:
@@ -43,6 +44,9 @@ functions:
           arn: !GetAtt ItemTableResource.StreamArn
 
 custom:
+  esbuild:
+    bundle: true
+    minify: true
   appSync:
     name: AmplifiedToDo_${self:provider.stage}
     authenticationType: AMAZON_COGNITO_USER_POOLS

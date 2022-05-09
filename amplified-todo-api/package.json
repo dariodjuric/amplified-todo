@@ -10,6 +10,7 @@
     "graphql-function-transformer": "^3.3.21",
     "graphql-key-transformer": "^3.2.30",
     "graphql-transformer-core": "^7.4.13",
-    "serverless-appsync-plugin": "^1.13.0"
+    "serverless-appsync-plugin": "^1.13.0",
+    "serverless-esbuild": "^1.26.2"
   }
 }
