@@ -16,6 +16,15 @@ provider:
     ITEM_TABLE_NAME: Item_${self:provider.stage}
     USER_PREFERENCE_TABLE_NAME: UserPreference_${self:provider.stage}
     NOTIFICATION_QUEUE_TABLE_NAME: NotificationQueue_${self:provider.stage}
+    S3_BUCKET_NAME: ${self:service}-${opt:stage, self:provider.stage}-images
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+          Resource: 'arn:aws:s3:::${self:provider.environment.S3_BUCKET_NAME}/*'
 
 functions:
   processQueue:
@@ -139,3 +148,21 @@ resources:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.NOTIFICATION_QUEUE_TABLE_NAME}
+    ImageBucketResource:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.S3_BUCKET_NAME}
+    ImageBucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicRead
+              Effect: Allow
+              Principal: '*'
+              Action:
+                - 's3:GetObject'
+              Resource: !Join ['', ['arn:aws:s3:::', !Ref ImageBucketResource, /*]]
+        Bucket:
+          Ref: ImageBucketResource
